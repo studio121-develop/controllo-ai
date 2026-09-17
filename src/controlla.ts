@@ -32,7 +32,7 @@ function daRaggiungibilita(home: Lettura, origine: string): Controllo[] {
 }
 
 function daRobots(robots: Lettura): { controlli: Controllo[]; sitemap: readonly string[] } {
-  if (robots.stato !== 200) return { controlli: [controllo("robots", "Le AI possono leggere il sito", "neutro", "file robots.txt assente: tutti i programmi leggono tutto")], sitemap: [] };
+  if (robots.stato !== 200) return { controlli: [controllo("robots", "Le AI possono leggere il sito", "bene", "nessun robots.txt: tutti i programmi possono leggere tutto")], sitemap: [] };
   const r = analizzaRobots(robots.corpo);
   const rispondono = robotBloccati(r, ROBOT_CHE_RISPONDONO);
   const addestrano = robotBloccati(r, ROBOT_CHE_SI_ADDESTRANO);
@@ -99,7 +99,8 @@ export async function controlla(sito: string, opzioni: Opzioni = {}): Promise<Ri
     for (const lp of letture) {
       /* Una pagina che rimanda alla home (o a una già vista) non è una pagina: si salta. */
       const finale = lp.urlFinale.replace(/\/$/, "");
-      if (lp.stato === 200 && viste.has(finale)) continue;
+      /* Stesso indirizzo già visto, o stesso contenuto della home con un altro indirizzo: non è un'altra pagina. */
+      if (lp.stato === 200 && (viste.has(finale) || lp.corpo === home.corpo)) continue;
       viste.add(finale);
       if (lp.stato !== 200 || !lp.corpo) { pagine.push({ url: lp.urlRichiesto, stato: lp.stato, controlli: [] }); problemi++; continue; }
       const cp = controllaPagina(lp.corpo, lp.urlFinale, lp.intestazioni["x-robots-tag"] ?? null, false);

@@ -104,9 +104,10 @@ export function controllaPagina(html: string, url: string, xRobots: string | nul
   c.push(controllo("noindex", "La pagina chiede di essere ignorata", noindex ? "male" : "bene", noindex ? `c'è un «noindex»${m.noindex ? " nella pagina" : ""}${/\bnoindex\b/i.test(xRobots ?? "") ? " nelle intestazioni del server" : ""}: Google e le AI la scartano` : "nessun «noindex»", dove));
 
   const t = m.titolo;
-  const titoloDebole = TITOLI_VUOTI.test(t) || t.toLowerCase() === dominio || t.toLowerCase() === dominio.split(".")[0];
-  c.push(controllo("titolo", "La pagina ha un titolo chiaro", !t ? "male" : titoloDebole ? "male" : t.length < 15 || t.length > 70 ? "neutro" : "bene",
-    !t ? "manca il titolo" : titoloDebole ? `«${t}»: dice solo il nome, non cosa fai` : `«${t}»${t.length > 70 ? " (lungo: Google lo taglia)" : t.length < 15 ? " (corto)" : ""}`, dove));
+  const titoloGenerico = TITOLI_VUOTI.test(t);
+  const titoloSoloNome = !titoloGenerico && (t.toLowerCase() === dominio || t.toLowerCase() === dominio.split(".")[0]);
+  c.push(controllo("titolo", "La pagina ha un titolo chiaro", !t ? "male" : titoloGenerico || titoloSoloNome ? "male" : t.length < 15 || t.length > 70 ? "neutro" : "bene",
+    !t ? "manca il titolo" : titoloGenerico ? `«${t}»: un titolo generico, non dice né chi sei né cosa fai` : titoloSoloNome ? `«${t}»: dice solo il nome, non cosa fai` : `«${t}»${t.length > 70 ? " (lungo: Google lo taglia)" : t.length < 15 ? " (corto)" : ""}`, dove));
 
   const d = m.descrizione;
   const descDebole = !!d && (DESCRIZIONI_VUOTE.test(d) || d.toLowerCase() === t.toLowerCase());

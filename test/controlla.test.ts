@@ -64,6 +64,12 @@ describe("controlla", () => {
     expect(r.pagine.map((p) => p.url)).not.toContain("https://rossi.it/servizi/");
     expect(r.controlli.find((c) => c.chiave === "pagine")).toMatchObject({ esito: "bene" });
   });
+  it("index.html e la copia della home non sono altre pagine; senza robots.txt le AI leggono tutto", async () => {
+    const r = await controlla("rossi.it", { chiama: sitoFinto({ "https://rossi.it/robots.txt": new Response("", { status: 404 }), "https://rossi.it/sitemap.xml": new Response("<urlset><url><loc>https://rossi.it/index.html</loc></url><url><loc>https://rossi.it/copia/</loc></url></urlset>"), "https://rossi.it/copia/": new Response(HOME) }) });
+    expect(r.controlli.find((c) => c.chiave === "robots")).toMatchObject({ esito: "bene" });
+    expect(r.pagine.map((p) => p.url)).not.toContain("https://rossi.it/index.html");
+    expect(r.pagine.map((p) => p.url)).not.toContain("https://rossi.it/copia/");
+  });
   it("confronto fra due controlli", async () => {
     const prima = await controlla("rossi.it", { chiama: sitoFinto({ "https://rossi.it/llms.txt": new Response("", { status: 404 }) }), modalita: "rapido" });
     const dopo = await controlla("rossi.it", { chiama: sitoFinto(), modalita: "rapido" });

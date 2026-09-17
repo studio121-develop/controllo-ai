@@ -16,6 +16,8 @@ describe("pagina", () => {
     expect(per.noindex!.esito).toBe("male");
     expect(per.titolo!.esito).toBe("male");
     expect(per.titolo!.dettaglio).toContain("dice solo il nome");
+    const generico = controllaPagina(`<html><head><title>Home</title></head><body></body></html>`, "https://rossi.it/", null, true).find((x) => x.chiave === "titolo")!;
+    expect(generico.dettaglio).toContain("titolo generico");
     expect(per.descrizione!.esito).toBe("male");
     expect(per.h1!.esito).toBe("male");
     expect(per.lingua!.esito).toBe("male");
