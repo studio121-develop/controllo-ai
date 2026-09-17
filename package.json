@@ -1,0 +1,21 @@
+{
+  "name": "@studio121/controllo-ai",
+  "version": "1.0.0",
+  "description": "Il sito è leggibile dalle AI? Sette controlli semplici su robots.txt, llms.txt e pagina principale, con semaforo e punteggio.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "bin": { "controllo-ai": "./bin/controllo-ai.js" },
+  "files": ["dist", "bin", "README.md", "SKILL.md"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "verifica": "npm run typecheck && npm test && npm run build",
+    "prepare": "npm run build"
+  },
+  "devDependencies": { "@types/node": "^22.18.0", "typescript": "^5.9.0", "vitest": "^3.2.0" },
+  "license": "MIT"
+}
