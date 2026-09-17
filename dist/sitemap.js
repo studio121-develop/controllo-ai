@@ -8,6 +8,8 @@ export function sitemapIndice(xml) {
 const NON_PAGINE = /\.(jpe?g|png|gif|webp|svg|pdf|zip|mp4|mp3|css|js|xml|json|woff2?)(\?|$)|\/(feed|wp-json|wp-admin|tag|category|author|page)\/|\?(s|replytocom)=|#/i;
 /* Le pagine legali e di servizio non sono «importanti» per chi cerca l'attività. */
 const PAGINE_DI_SERVIZIO = /privacy|cookie|terms|termini|condizioni|legal|note-legali|disclaimer|login|carrello|cart|checkout|account|wp-login|sitemap|grazie|thank|404|search|cerca/i;
+/* Altri indirizzi della pagina principale: non sono pagine diverse. */
+export const ALIAS_HOME = /^\/(index|home|default)(\.(html?|php|aspx?))?\/?$/i;
 /** I link interni della home, in ordine di apparizione, senza doppioni né file. */
 export function linkInterni(html, base, limite = 40) {
     const origine = new URL(base);
@@ -60,7 +62,7 @@ export function paginePresentazione(html, base) {
 export function scegliPagine(daSitemap, daLink, home, quante = 5) {
     const norm = (u) => u.replace(/\/$/, "");
     const h = norm(home);
-    const candidate = [...daSitemap, ...daLink].filter((u) => norm(u) !== h && !NON_PAGINE.test(u) && !PAGINE_DI_SERVIZIO.test(new URL(u).pathname));
+    const candidate = [...daSitemap, ...daLink].filter((u) => norm(u) !== h && !NON_PAGINE.test(u) && !PAGINE_DI_SERVIZIO.test(new URL(u).pathname) && !ALIAS_HOME.test(new URL(u).pathname));
     const perChiave = new Map();
     for (const u of candidate)
         if (!perChiave.has(norm(u)))

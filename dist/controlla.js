@@ -38,7 +38,7 @@ function daRaggiungibilita(home, origine) {
 }
 function daRobots(robots) {
     if (robots.stato !== 200)
-        return { controlli: [controllo("robots", "Le AI possono leggere il sito", "neutro", "file robots.txt assente: tutti i programmi leggono tutto")], sitemap: [] };
+        return { controlli: [controllo("robots", "Le AI possono leggere il sito", "bene", "nessun robots.txt: tutti i programmi possono leggere tutto")], sitemap: [] };
     const r = analizzaRobots(robots.corpo);
     const rispondono = robotBloccati(r, ROBOT_CHE_RISPONDONO);
     const addestrano = robotBloccati(r, ROBOT_CHE_SI_ADDESTRANO);
@@ -101,7 +101,8 @@ export async function controlla(sito, opzioni = {}) {
         for (const lp of letture) {
             /* Una pagina che rimanda alla home (o a una già vista) non è una pagina: si salta. */
             const finale = lp.urlFinale.replace(/\/$/, "");
-            if (lp.stato === 200 && viste.has(finale))
+            /* Stesso indirizzo già visto, o stesso contenuto della home con un altro indirizzo: non è un'altra pagina. */
+            if (lp.stato === 200 && (viste.has(finale) || lp.corpo === home.corpo))
                 continue;
             viste.add(finale);
             if (lp.stato !== 200 || !lp.corpo) {
@@ -118,6 +119,8 @@ export async function controlla(sito, opzioni = {}) {
         if (controllate > 0)
             controlli.push(controllo("pagine", "Le altre pagine importanti sono in ordine", problemi === 0 ? "bene" : problemi < controllate ? "neutro" : "male", problemi === 0 ? `${controllate} pagine controllate, tutte a posto` : `${problemi} su ${controllate} pagine con titolo, descrizione o titolo principale mancanti, o non raggiungibili`));
     }
-    const p = punteggio(controlli);
-    return { url: origine, urlFinale: home.urlFinale || origine, punteggio: p, giudizio: giudizio(p, bloccante(controlli)), controlli, pagine, controllatoIl: new Date().toISOString(), durataMs: Date.now() - inizio, modalita };
+    /* Un problema decisivo (sito giù, anti-bot, noindex, AI bloccate) tiene il punteggio basso, qualunque sia il resto. */
+    const decisivo = bloccante(controlli);
+    const p = decisivo ? Math.min(punteggio(controlli), 20) : punteggio(controlli);
+    return { url: origine, urlFinale: home.urlFinale || origine, punteggio: p, giudizio: giudizio(p, decisivo), controlli, pagine, controllatoIl: new Date().toISOString(), durataMs: Date.now() - inizio, modalita };
 }

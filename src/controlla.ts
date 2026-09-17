@@ -112,6 +112,8 @@ export async function controlla(sito: string, opzioni: Opzioni = {}): Promise<Ri
       problemi === 0 ? `${controllate} pagine controllate, tutte a posto` : `${problemi} su ${controllate} pagine con titolo, descrizione o titolo principale mancanti, o non raggiungibili`));
   }
 
-  const p = punteggio(controlli);
-  return { url: origine, urlFinale: home.urlFinale || origine, punteggio: p, giudizio: giudizio(p, bloccante(controlli)), controlli, pagine, controllatoIl: new Date().toISOString(), durataMs: Date.now() - inizio, modalita };
+  /* Un problema decisivo (sito giù, anti-bot, noindex, AI bloccate) tiene il punteggio basso, qualunque sia il resto. */
+  const decisivo = bloccante(controlli);
+  const p = decisivo ? Math.min(punteggio(controlli), 20) : punteggio(controlli);
+  return { url: origine, urlFinale: home.urlFinale || origine, punteggio: p, giudizio: giudizio(p, decisivo), controlli, pagine, controllatoIl: new Date().toISOString(), durataMs: Date.now() - inizio, modalita };
 }
