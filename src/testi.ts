@@ -1,0 +1,60 @@
+/** Le parole del controllo: perché conta (per chi non è tecnico), cosa fare (per chi cura il sito), quanto pesa. */
+import type { Peso } from "./tipi.js";
+
+export const SPIEGAZIONI: Record<string, string> = {
+  raggiungibile: "Se la pagina principale non risponde, nessuno legge niente: né le persone né le AI.",
+  antibot: "Il sito chiede di «dimostrare di essere umani»: le AI non superano quella porta e non ti citano.",
+  redirect: "Un indirizzo che rimbalza fra www e non-www confonde chi legge e fa perdere pezzi.",
+  robots: "Se il sito chiude la porta ai programmi che rispondono alle domande, ChatGPT e simili non possono leggerlo e non ti citano.",
+  motori: "Google e Bing alimentano anche le risposte AI: chiuderli è sparire ovunque.",
+  googleai: "Google-Extended governa Gemini e le risposte AI di Google con le fonti: chiuderlo toglie visibilità lì.",
+  noindex: "Un «noindex» dice a tutti: non mettermi nei risultati. Va bene sulle pagine di servizio, non sulla principale.",
+  titolo: "Il titolo della pagina è la prima cosa che le AI e Google leggono: deve dire cosa fai, non solo come ti chiami.",
+  descrizione: "Due righe che dicono cosa fai: senza, le AI devono indovinare.",
+  h1: "Un titolo principale chiaro dice subito di cosa parla la pagina.",
+  lingua: "Dichiarare la lingua del sito evita risposte in lingue sbagliate.",
+  testo: "Le AI leggono il testo: se ce n'è poco, o si vede solo dopo che il browser esegue dei programmi, non hanno niente da citare.",
+  contatti: "Chi chiede a un'AI «chi fa questo vicino a me» ottiene nome, città e telefono: se non sono scritti, non ci sei.",
+  canonical: "L'indirizzo ufficiale evita che la stessa pagina conti due volte o venga attribuita a un altro sito.",
+  og: "Quando il sito viene condiviso o citato da un assistente, l'anteprima con titolo, descrizione e immagine è il tuo biglietto da visita.",
+  refresh: "Un rinvio automatico fa fermare i programmi prima di leggere qualcosa.",
+  llms: "Un file che riassume alle AI chi sei e cosa fai. Non obbligatorio, ma aiuta.",
+  schema: "Una scheda invisibile con nome, indirizzo e attività, scritta nel modo che le AI capiscono.",
+  schemaCampi: "La scheda c'è ma è incompleta: le AI trovano il nome, non dove sei o come chiamarti.",
+  faq: "Le domande e risposte sono il formato che le AI citano più volentieri.",
+  sitemap: "La mappa del sito dice ai programmi quali pagine esistono: senza, ne trovano meno.",
+  chisiamo: "Le AI cercano le pagine «chi siamo» e «contatti» per capire chi c'è dietro un sito.",
+  pagine: "Le altre pagine importanti devono avere titolo e descrizione come la principale.",
+};
+
+export const SOLUZIONI: Record<string, string> = {
+  raggiungibile: "Verificare hosting, DNS e certificato: la home deve rispondere 200 in meno di 8 secondi.",
+  antibot: "Nel firewall/Cloudflare: abbassare il livello di sfida per la home o creare regole che lascino passare i bot verificati (OAI-SearchBot, PerplexityBot, Claude, Googlebot).",
+  redirect: "Un solo redirect 301 da http e da www (o non-www) verso l'indirizzo canonico; niente catene.",
+  robots: "Nel robots.txt togliere i Disallow per i bot che rispondono (OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-SearchBot, Claude-User). Bloccare GPTBot/ClaudeBot/CCBot resta una scelta legittima.",
+  motori: "Nel robots.txt non bloccare mai Googlebot e Bingbot sulla home e sulle pagine pubbliche.",
+  googleai: "Se si vuole comparire su Gemini e nelle risposte AI di Google, togliere il Disallow a Google-Extended.",
+  noindex: "Rimuovere il meta robots noindex (o l'intestazione X-Robots-Tag) dalla home e dalle pagine che devono comparire.",
+  titolo: "<title> di 30-65 caratteri: cosa fai + dove + nome, es. «Serramenti in PVC e alluminio a Ragusa · Rossi».",
+  descrizione: "<meta name=\"description\"> di 90-160 caratteri, specifica, diversa dal titolo.",
+  h1: "Un solo <h1> testuale per pagina, con il tema della pagina; il logo non va nell'h1.",
+  lingua: "<html lang=\"it\"> (o la lingua reale del testo).",
+  testo: "Almeno 150-300 parole di testo reale nell'HTML della home; se il sito è solo JavaScript, attivare il rendering lato server o una versione pre-renderizzata.",
+  contatti: "Scrivere in chiaro nella home (o nel footer, ma nell'HTML) nome dell'attività, indirizzo con città, telefono e email; usare href=\"tel:\" e \"mailto:\".",
+  canonical: "<link rel=\"canonical\" href=\"https://dominio/pagina/\"> che punta all'indirizzo definitivo dello stesso dominio.",
+  og: "Aggiungere og:title, og:description e og:image (1200×630).",
+  refresh: "Sostituire il meta refresh con un redirect 301 lato server, o toglierlo.",
+  llms: "Creare /llms.txt in Markdown: titolo, una frase su chi siete e cosa fate, elenco delle pagine principali con link assoluti.",
+  schema: "Aggiungere nel <head> un JSON-LD di tipo LocalBusiness/ProfessionalService (o Organization) con name, url, telephone, address (streetAddress, addressLocality, postalCode), sameAs.",
+  schemaCampi: "Completare il JSON-LD dell'attività con i campi mancanti indicati.",
+  faq: "Aggiungere una sezione domande e risposte reali con markup FAQPage.",
+  sitemap: "Generare /sitemap.xml e dichiararla nel robots.txt.",
+  chisiamo: "Linkare dalla home una pagina «chi siamo» e una «contatti» (o una sezione con quei nomi).",
+  pagine: "Dare a ogni pagina importante un <title> e una description propri.",
+};
+
+export const PESI: Record<string, Peso> = {
+  raggiungibile: 3, antibot: 3, motori: 3, noindex: 3, robots: 3, testo: 3,
+  titolo: 2, descrizione: 2, contatti: 2, schema: 2, redirect: 2, canonical: 1, googleai: 1,
+  h1: 1, lingua: 1, og: 1, refresh: 2, llms: 1, schemaCampi: 1, faq: 1, sitemap: 1, chisiamo: 1, pagine: 1,
+};
