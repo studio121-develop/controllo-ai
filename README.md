@@ -32,10 +32,12 @@ const r = await controlla("studio121.it", { modalita: "completo" });
 ```
 ```
 # 3. servizio web (dopo il deploy su Vercel)
-GET https://controllo-ai.vercel.app/api/controlla?url=studio121.it[&modalita=rapido]
+GET https://studio121-tools.vercel.app/api/controllo-ai/controlla?url=studio121.it[&modalita=rapido]   # in futuro tools.studio121.it
 ```
 
 Chi lo usa da Claude Code trova le istruzioni in `SKILL.md`.
+
+Su Vercel il progetto si chiama `studio121-tools`: ospita questo e gli strumenti futuri, ognuno sotto `/api/<nome-strumento>/`.
 
 ## Sviluppo
 

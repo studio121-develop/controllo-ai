@@ -1,4 +1,4 @@
-import { controlla } from "../src/index.js";
+import { controlla } from "../../src/index.js";
 
 export const config = { maxDuration: 60 };
 
