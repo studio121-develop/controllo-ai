@@ -12,6 +12,10 @@ export type Controllo = Readonly<{
     /** cosa fare, per chi cura il sito */
     comeRisolvere: string;
     peso: Peso;
+    /** «documentato»: una fonte pubblica lega il controllo a come le AI leggono o citano; «dedotto»: buona pratica senza fonte diretta */
+    base: "documentato" | "dedotto";
+    /** la fonte, in una riga */
+    fonte: string;
     /** su quale pagina (assente = tutto il sito) */
     pagina?: string;
 }>;

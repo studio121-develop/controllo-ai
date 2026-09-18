@@ -86,7 +86,12 @@ export async function controlla(sito, opzioni = {}) {
         controlli.push(...controllaPagina(home.corpo, urlHome, home.intestazioni["x-robots-tag"] ?? null, true));
         controlli.push(...controllaDatiStrutturati(home.corpo));
         const pres = paginePresentazione(home.corpo, urlHome);
-        controlli.push(controllo("chisiamo", "Si trovano «chi siamo» e «contatti»", pres.chiSiamo && pres.contatti ? "bene" : pres.chiSiamo || pres.contatti ? "neutro" : "male", pres.chiSiamo && pres.contatti ? "entrambe linkate dalla pagina principale" : pres.chiSiamo ? "c'è «chi siamo», manca «contatti»" : pres.contatti ? "c'è «contatti», manca «chi siamo»" : "nessuna delle due è linkata dalla pagina principale"));
+        /* Si capisce chi c'è dietro? Vale qualunque via: una pagina che lo racconta (con qualsiasi nome), i dati dell'attività in home, la scheda strutturata completa. */
+        const contattiInHome = controlli.find((c) => c.chiave === "contatti")?.esito === "bene";
+        const schedaCompleta = controlli.find((c) => c.chiave === "schemaCampi")?.esito === "bene";
+        const vie = [pres.chiSiamo ? "una pagina che racconta chi siete" : "", schedaCompleta ? "la scheda strutturata dell'attività" : "", contattiInHome ? "nome, indirizzo e contatti nella pagina principale" : "", pres.contatti ? "una pagina contatti" : ""].filter(Boolean);
+        const esito = pres.chiSiamo || schedaCompleta || contattiInHome ? "bene" : pres.contatti ? "neutro" : "male";
+        controlli.push(controllo("chisiamo", "Si capisce chi c'è dietro il sito", esito, esito === "bene" ? `sì: ${vie.join(", ")}` : esito === "neutro" ? "c'è una pagina contatti, ma nessuna pagina o scheda che dica chi siete: consigliata" : "dalla pagina principale non si arriva a chi siete né a come contattarvi"));
         pagine.push({ url: urlHome, stato: home.stato, controlli: controlli.filter((c) => !c.pagina) });
     }
     const l = esaminaLlms(llms);

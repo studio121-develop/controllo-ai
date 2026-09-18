@@ -43,7 +43,7 @@ export function paginePresentazione(html: string, base: string): { chiSiamo: str
     }
     return null;
   };
-  return { chiSiamo: trova(/chi[-_ ]?siamo|about|la[-_ ]nostra[-_ ]storia|azienda|lo[-_ ]studio/i), contatti: trova(/contatt|contact|parliamone|dove[-_ ]siamo|prenota/i) };
+  return { chiSiamo: trova(/chi[-_ ]?siamo|about|la[-_ ]nostra[-_ ]storia|storia|azienda|lo[-_ ]studio|il[-_ ]molino|la[-_ ]famiglia|chi[-_ ]sono|filosofia|tradizione|da[-_ ]dove[-_ ]veniamo|il[-_ ]team|la[-_ ]squadra/i), contatti: trova(/contatt|contact|parliamone|dove[-_ ]siamo|prenota/i) };
 }
 
 /** Le pagine da controllare oltre alla home: prima dalla sitemap (le più corte, di solito le sezioni), poi dai link. */

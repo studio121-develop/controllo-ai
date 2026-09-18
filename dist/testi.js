@@ -15,12 +15,12 @@ export const SPIEGAZIONI = {
     canonical: "L'indirizzo ufficiale evita che la stessa pagina conti due volte o venga attribuita a un altro sito.",
     og: "Quando il sito viene condiviso o citato da un assistente, l'anteprima con titolo, descrizione e immagine è il tuo biglietto da visita.",
     refresh: "Un rinvio automatico fa fermare i programmi prima di leggere qualcosa.",
-    llms: "Un file che riassume alle AI chi sei e cosa fai. Non obbligatorio, ma aiuta.",
+    llms: "Un file che riassume alle AI chi sei e cosa fai. È una proposta: nessuna grande AI ha dichiarato di leggerlo. Facoltativo.",
     schema: "Una scheda invisibile con nome, indirizzo e attività, scritta nel modo che le AI capiscono.",
     schemaCampi: "La scheda c'è ma è incompleta: le AI trovano il nome, non dove sei o come chiamarti.",
-    faq: "Le domande e risposte sono il formato che le AI citano più volentieri.",
+    faq: "Le domande e risposte sono un formato comodo da citare. Consigliato, non richiesto.",
     sitemap: "La mappa del sito dice ai programmi quali pagine esistono: senza, ne trovano meno.",
-    chisiamo: "Le AI cercano le pagine «chi siamo» e «contatti» per capire chi c'è dietro un sito.",
+    chisiamo: "Chi legge il sito, persona o AI, deve capire chi c'è dietro: chi siete, dove siete, come contattarvi. Non conta il nome della pagina, conta che l'informazione ci sia e sia raggiungibile dalla pagina principale.",
     pagine: "Le altre pagine importanti devono avere titolo e descrizione come la principale.",
 };
 export const SOLUZIONI = {
@@ -45,8 +45,36 @@ export const SOLUZIONI = {
     schemaCampi: "Completare il JSON-LD dell'attività con i campi mancanti indicati.",
     faq: "Aggiungere una sezione domande e risposte reali con markup FAQPage.",
     sitemap: "Generare /sitemap.xml e dichiararla nel robots.txt.",
-    chisiamo: "Linkare dalla home una pagina «chi siamo» e una «contatti» (o una sezione con quei nomi).",
+    chisiamo: "Rendere raggiungibile dalla home chi siete e dove siete: una pagina che lo racconti (qualunque nome abbia), oppure i dati dell'attività nella home o nel piede di pagina, meglio se anche nei dati strutturati.",
     pagine: "Dare a ogni pagina importante un <title> e una description propri.",
+};
+/** Data dell'ultima verifica delle fonti. */
+export const FONTI_VERIFICATE_IL = "2026-09-18";
+/** Su cosa poggia ogni controllo. «documentato» = fonte pubblica del produttore; «dedotto» = buona pratica, nessuna AI dichiara di usarla. */
+export const FONTI = {
+    raggiungibile: { base: "documentato", fonte: "Ogni robot legge solo pagine che rispondono: documentazione dei crawler OpenAI, Anthropic, Google." },
+    antibot: { base: "documentato", fonte: "OpenAI e Anthropic documentano che i loro robot non superano sfide anti-bot; Cloudflare offre la verifica dei bot AI." },
+    redirect: { base: "documentato", fonte: "Google Search Central: reindirizzamenti e catene." },
+    robots: { base: "documentato", fonte: "OpenAI (GPTBot, ChatGPT-User, OAI-SearchBot), Anthropic (ClaudeBot, Claude-User, Claude-SearchBot), Perplexity (PerplexityBot, Perplexity-User): rispettano robots.txt." },
+    motori: { base: "documentato", fonte: "Le risposte AI di Google e Copilot di Bing attingono ai rispettivi indici (documentazione Google AI Overviews e Bing)." },
+    googleai: { base: "documentato", fonte: "Google: Google-Extended governa l'uso dei contenuti per Gemini e le risposte AI con fonti." },
+    noindex: { base: "documentato", fonte: "Google Search Central: noindex esclude dall'indice, e le risposte AI di Google nascono dall'indice." },
+    titolo: { base: "documentato", fonte: "Google Search Central: titoli descrittivi; le risposte AI di Google usano gli stessi segnali della ricerca." },
+    descrizione: { base: "documentato", fonte: "Google Search Central: meta description." },
+    h1: { base: "dedotto", fonte: "Buona pratica di struttura; Google non lo documenta come segnale per le risposte AI." },
+    lingua: { base: "documentato", fonte: "Google Search Central: dichiarazione della lingua e versioni linguistiche." },
+    testo: { base: "documentato", fonte: "OpenAI e Anthropic: i robot leggono l'HTML servito, non eseguono JavaScript; Google: contenuti nell'HTML iniziale." },
+    contatti: { base: "documentato", fonte: "Google, «creare contenuti utili»: chi c'è dietro il sito, come contattarlo; linee guida sulla qualità (E-E-A-T)." },
+    canonical: { base: "documentato", fonte: "Google Search Central: URL canonico." },
+    og: { base: "dedotto", fonte: "Open Graph è usato da chat e social per le anteprime; nessuna AI documenta di usarlo per citare." },
+    refresh: { base: "documentato", fonte: "Google Search Central: meta refresh sconsigliato, usare redirect lato server." },
+    llms: { base: "dedotto", fonte: "llms.txt è una proposta (llmstxt.org); nessuna delle grandi AI ha dichiarato di leggerlo. Facoltativo." },
+    schema: { base: "documentato", fonte: "Google Search Central: dati strutturati; Microsoft Bing: lo schema aiuta i modelli a capire i contenuti." },
+    schemaCampi: { base: "documentato", fonte: "Google: proprietà consigliate di LocalBusiness/Organization." },
+    faq: { base: "dedotto", fonte: "Il formato domanda-risposta è comodo da citare; Google ha ridotto i risultati FAQ dal 2023. Consigliato, non richiesto." },
+    sitemap: { base: "documentato", fonte: "Google e Bing: la sitemap aiuta a scoprire le pagine." },
+    chisiamo: { base: "documentato", fonte: "Google, «creare contenuti utili» e linee guida sulla qualità: informazioni chiare su chi gestisce il sito. Il nome della pagina è indifferente." },
+    pagine: { base: "documentato", fonte: "Google Search Central: titolo e descrizione per ogni pagina." },
 };
 export const PESI = {
     raggiungibile: 3, antibot: 3, motori: 3, noindex: 3, robots: 3, testo: 3,

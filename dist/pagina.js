@@ -1,6 +1,7 @@
-import { SPIEGAZIONI, SOLUZIONI, PESI } from "./testi.js";
+import { SPIEGAZIONI, SOLUZIONI, PESI, FONTI } from "./testi.js";
 export function controllo(chiave, nome, esito, dettaglio, pagina) {
-    return { chiave, nome, esito, dettaglio, spiegazione: SPIEGAZIONI[chiave] ?? "", comeRisolvere: SOLUZIONI[chiave] ?? "", peso: PESI[chiave] ?? 1, ...(pagina ? { pagina } : {}) };
+    const f = FONTI[chiave] ?? { base: "dedotto", fonte: "" };
+    return { chiave, nome, esito, dettaglio, spiegazione: SPIEGAZIONI[chiave] ?? "", comeRisolvere: SOLUZIONI[chiave] ?? "", peso: PESI[chiave] ?? 1, base: f.base, fonte: f.fonte, ...(pagina ? { pagina } : {}) };
 }
 /** Il contenuto di un meta, rispettando il tipo di virgolette usato (dentro può esserci l'apostrofo). */
 export function meta(html, nome) {

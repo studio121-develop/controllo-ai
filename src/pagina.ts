@@ -3,10 +3,11 @@
  * quanto testo ha davvero, se dice chi è e dove sta.
  */
 import type { Controllo, Esito } from "./tipi.js";
-import { SPIEGAZIONI, SOLUZIONI, PESI } from "./testi.js";
+import { SPIEGAZIONI, SOLUZIONI, PESI, FONTI } from "./testi.js";
 
 export function controllo(chiave: string, nome: string, esito: Esito, dettaglio: string, pagina?: string): Controllo {
-  return { chiave, nome, esito, dettaglio, spiegazione: SPIEGAZIONI[chiave] ?? "", comeRisolvere: SOLUZIONI[chiave] ?? "", peso: PESI[chiave] ?? 1, ...(pagina ? { pagina } : {}) };
+  const f = FONTI[chiave] ?? { base: "dedotto" as const, fonte: "" };
+  return { chiave, nome, esito, dettaglio, spiegazione: SPIEGAZIONI[chiave] ?? "", comeRisolvere: SOLUZIONI[chiave] ?? "", peso: PESI[chiave] ?? 1, base: f.base, fonte: f.fonte, ...(pagina ? { pagina } : {}) };
 }
 
 /** Il contenuto di un meta, rispettando il tipo di virgolette usato (dentro può esserci l'apostrofo). */

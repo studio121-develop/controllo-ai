@@ -77,3 +77,25 @@ describe("controlla", () => {
     expect(confronta(null, dopo)).toEqual([]);
   });
 });
+
+describe("base dei controlli e «chi c'è dietro»", () => {
+  it("ogni controllo dichiara base e fonte; i dedotti pesano 1", async () => {
+    const { controlla } = await import("../src/index.js");
+    const html = `<html lang="it"><head><title>Molino Latina, farine di grani antichi a Giarratana</title><meta name="description" content="Farine biologiche macinate a pietra, spedizione in tutta Italia."></head><body><h1>Farine</h1><p>${"testo ".repeat(200)}</p><a href="/contatti/">Contatti</a><a href="/il-molino/">Il molino</a></body></html>`;
+    const chiama = async (u: string) => new Response(u.endsWith("/") || u.includes("il-molino") || u.includes("contatti") ? html : "", { status: u.includes("robots") || u.includes("llms") || u.includes("sitemap") ? 404 : 200, headers: { "content-type": "text/html" } });
+    const r = await controlla("molinolatina.com", { chiama, modalita: "rapido" });
+    for (const c of r.controlli) { expect(["documentato", "dedotto"]).toContain(c.base); expect(c.fonte.length).toBeGreaterThan(10); if (c.base === "dedotto") expect(c.peso).toBe(1); }
+    const chi = r.controlli.find((c) => c.chiave === "chisiamo")!;
+    expect(chi.esito).toBe("bene");
+    expect(chi.dettaglio).toContain("una pagina che racconta chi siete");
+  });
+  it("solo contatti: consigliato, non mancante", async () => {
+    const { controlla } = await import("../src/index.js");
+    const html = `<html lang="it"><head><title>Negozio di farine online</title><meta name="description" content="Farine biologiche."></head><body><h1>Farine</h1><p>${"testo ".repeat(200)}</p><a href="/contatti/">Contatti</a></body></html>`;
+    const chiama = async (u: string) => new Response(html, { status: u.includes("robots") || u.includes("llms") ? 404 : 200, headers: { "content-type": "text/html" } });
+    const r = await controlla("esempio.it", { chiama, modalita: "rapido" });
+    const chi = r.controlli.find((c) => c.chiave === "chisiamo")!;
+    expect(chi.esito).toBe("neutro");
+    expect(chi.dettaglio).toContain("consigliata");
+  });
+});

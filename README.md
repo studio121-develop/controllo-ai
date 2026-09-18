@@ -10,7 +10,9 @@ Cosa controlla:
 - **Dati strutturati**: JSON-LD (anche `@type` in lista e `@graph`) e microdata; scheda dell'attività validata campo per campo; blocchi malformati segnalati; FAQ.
 - **llms.txt** valido, non solo presente (titolo, frase, link, non una 404 travestita).
 - **Sitemap** e le pagine importanti collegate (fino a 5): titolo, descrizione, h1, noindex, 404. Le pagine legali e quelle che rimandano alla home sono escluse.
-- **«Chi siamo» e «contatti»** raggiungibili dalla home.
+- **Si capisce chi c'è dietro**: una pagina che lo racconta (con qualunque nome), oppure i dati dell'attività in home o nella scheda strutturata.
+
+Ogni controllo dichiara su cosa poggia (`base`): **documentato** quando una fonte pubblica del produttore (OpenAI, Anthropic, Google, Bing, Perplexity) lo lega a come le AI leggono o citano; **dedotto** quando è una buona pratica senza fonte diretta (llms.txt, FAQ, Open Graph, h1). I dedotti pesano 1 e nel report sono «consigliati», mai «mancanti». Le fonti sono in `src/testi.ts` (`FONTI`), verificate il 18 settembre 2026.
 
 Modalità `rapido` (solo home, ~1 s) e `completo` (con sitemap e altre pagine, 2-10 s). Non lancia mai: ogni guasto è un controllo con la causa. `confronta(prima, dopo)` dice cosa è cambiato fra due controlli.
 
