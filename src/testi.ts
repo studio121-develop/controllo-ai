@@ -47,7 +47,7 @@ export const SOLUZIONI: Record<string, string> = {
   llms: "Creare /llms.txt in Markdown: titolo, una frase su chi siete e cosa fate, elenco delle pagine principali con link assoluti.",
   schema: "Aggiungere nel <head> un JSON-LD di tipo LocalBusiness/ProfessionalService (o Organization) con name, url, telephone, address (streetAddress, addressLocality, postalCode), sameAs.",
   schemaCampi: "Completare il JSON-LD dell'attività con i campi mancanti indicati.",
-  faq: "Aggiungere una sezione domande e risposte reali con markup FAQPage.",
+  faq: "Una pagina o sezione di domande e risposte reali (qualunque nome abbia) con markup FAQPage, raggiungibile dalla home o dalla sitemap.",
   sitemap: "Generare /sitemap.xml e dichiararla nel robots.txt.",
   chisiamo: "Rendere raggiungibile dalla home chi siete e dove siete: una pagina che lo racconti (qualunque nome abbia), oppure i dati dell'attività nella home o nel piede di pagina, meglio se anche nei dati strutturati.",
   pagine: "Dare a ogni pagina importante un <title> e una description propri.",

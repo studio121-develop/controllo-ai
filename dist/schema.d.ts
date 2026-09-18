@@ -18,3 +18,8 @@ export declare function campiAttivita(n: Nodo): {
     mancanti: string[];
 };
 export declare function controllaDatiStrutturati(html: string): readonly Controllo[];
+/** Domande e risposte in una pagina: col markup FAQPage (qualunque nome abbia la pagina) o almeno tre titoli che sono domande. */
+export declare function domandeERisposte(html: string): {
+    markup: boolean;
+    titoliDomanda: number;
+};

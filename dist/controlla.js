@@ -9,6 +9,7 @@ import { leggi, origineDa, sembraInManutenzione, sembraSfidaAntiBot } from "./re
 import { MOTORI, ROBOT_CHE_RISPONDONO, ROBOT_CHE_SI_ADDESTRANO, ROBOT_GOOGLE_AI, analizzaRobots, robotBloccati } from "./robots.js";
 import { controllaDatiStrutturati } from "./schema.js";
 import { linkInterni, paginePresentazione, scegliPagine, sitemapIndice, urlDaSitemap } from "./sitemap.js";
+import { domandeERisposte } from "./schema.js";
 function daRaggiungibilita(home, origine) {
     const c = [];
     if (home.errore)
@@ -94,6 +95,10 @@ export async function controlla(sito, opzioni = {}) {
         controlli.push(controllo("chisiamo", "Si capisce chi c'è dietro il sito", esito, esito === "bene" ? `sì: ${vie.join(", ")}` : esito === "neutro" ? "c'è una pagina contatti, ma nessuna pagina o scheda che dica chi siete: consigliata" : "dalla pagina principale non si arriva a chi siete né a come contattarvi"));
         pagine.push({ url: urlHome, stato: home.stato, controlli: controlli.filter((c) => !c.pagina) });
     }
+    if (homeOk && modalita === "rapido") {
+        const f = domandeERisposte(home.corpo);
+        controlli.push(controllo("faq", "Ci sono domande e risposte", f.markup ? "bene" : "neutro", f.markup ? "presenti nella pagina principale, con il markup che le AI riconoscono" : f.titoliDomanda >= 3 ? `${f.titoliDomanda} domande nella pagina principale, senza markup FAQPage` : "non trovate nella pagina principale: facoltative"));
+    }
     const l = esaminaLlms(llms);
     controlli.push(controllo("llms", "C'è una guida per le AI (llms.txt)", l.valido ? "bene" : "neutro", l.motivo));
     if (homeOk && modalita === "completo") {
@@ -120,6 +125,18 @@ export async function controlla(sito, opzioni = {}) {
             if (cp.some((c) => c.esito === "male"))
                 problemi++;
         }
+        /* Domande e risposte: su qualunque pagina letta, col markup o con titoli-domanda; il nome della pagina non conta. */
+        const trovate = [{ url: home.urlFinale, ...domandeERisposte(home.corpo) }, ...letture.filter((lp) => lp.stato === 200 && lp.corpo).map((lp) => ({ url: lp.urlFinale, ...domandeERisposte(lp.corpo) }))];
+        const conMarkup = trovate.find((t) => t.markup);
+        const senzaMarkup = trovate.find((t) => !t.markup && t.titoliDomanda >= 3);
+        const nomePagina = (u) => { try {
+            const p = new URL(u).pathname;
+            return p === "/" ? "pagina principale" : p;
+        }
+        catch {
+            return u;
+        } };
+        controlli.push(controllo("faq", "Ci sono domande e risposte", conMarkup ? "bene" : "neutro", conMarkup ? `presenti in ${nomePagina(conMarkup.url)}, con il markup che le AI riconoscono` : senzaMarkup ? `${senzaMarkup.titoliDomanda} domande in ${nomePagina(senzaMarkup.url)}, ma senza il markup FAQPage: aggiungerlo` : "non trovate nelle pagine lette: facoltative"));
         const controllate = pagine.length - 1;
         if (controllate > 0)
             controlli.push(controllo("pagine", "Le altre pagine importanti sono in ordine", problemi === 0 ? "bene" : problemi < controllate ? "neutro" : "male", problemi === 0 ? `${controllate} pagine controllate, tutte a posto` : `${problemi} su ${controllate} pagine con titolo, descrizione o titolo principale mancanti, o non raggiungibili`));

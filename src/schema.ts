@@ -76,7 +76,13 @@ export function controllaDatiStrutturati(html: string): readonly Controllo[] {
   } else {
     c.push(controllo("schema", "Dati strutturati sull'attività", "male", d.blocchiRotti ? `${d.blocchiRotti} ${d.blocchiRotti === 1 ? "blocco presente ma scritto male" : "blocchi presenti ma scritti male"}: vengono ignorati` : "assenti: le AI non trovano nome, indirizzo e cosa fai in forma leggibile"));
   }
-  const faq = d.tipi.includes("FAQPage") || d.microdata.includes("FAQPage");
-  c.push(controllo("faq", "Ci sono domande e risposte", faq ? "bene" : "neutro", faq ? "presenti, con il markup che le AI riconoscono" : "assenti: facoltative, ma le AI le citano volentieri"));
   return c;
+}
+
+/** Domande e risposte in una pagina: col markup FAQPage (qualunque nome abbia la pagina) o almeno tre titoli che sono domande. */
+export function domandeERisposte(html: string): { markup: boolean; titoliDomanda: number } {
+  const d = leggiDatiStrutturati(html);
+  const markup = d.tipi.includes("FAQPage") || d.microdata.includes("FAQPage");
+  const titoli = [...html.matchAll(/<h[2-4][^>]*>([\s\S]*?)<\/h[2-4]>/gi)].map((m) => m[1]!.replace(/<[^>]+>/g, "").trim());
+  return { markup, titoliDomanda: titoli.filter((t) => /\?\s*$/.test(t) && t.length > 8).length };
 }

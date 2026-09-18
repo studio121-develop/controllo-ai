@@ -1,6 +1,6 @@
 {
   "name": "@studio121/controllo-ai",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Il sito è leggibile dalle AI? Venti controlli su raggiungibilità, robots.txt, llms.txt, pagina principale, dati strutturati e altre pagine, con semaforo, punteggio pesato, spiegazioni e soluzioni.",
   "type": "module",
   "main": "./dist/index.js",

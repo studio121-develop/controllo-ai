@@ -9,7 +9,7 @@ describe("dati strutturati", () => {
   it("scheda completa in JSON-LD con @type lista", () => {
     const html = `<script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","ProfessionalService"],"name":"Studio 121","url":"https://studio121.it","telephone":"+39 333 771 7599","address":{"@type":"PostalAddress","streetAddress":"Via Settembrini 71","addressLocality":"Ragusa"},"sameAs":["https://www.instagram.com/studio121"]}</script><script type="application/ld+json">{"@type":"FAQPage"}</script>`;
     const c = controllaDatiStrutturati(html);
-    expect(c.map((x) => [x.chiave, x.esito])).toEqual([["schema", "bene"], ["schemaCampi", "bene"], ["faq", "bene"]]);
+    expect(c.map((x) => [x.chiave, x.esito])).toEqual([["schema", "bene"], ["schemaCampi", "bene"]]);
   });
   it("scheda incompleta, dentro @graph, e un blocco rotto", () => {
     const html = `<script type="application/ld+json">{"@graph":[{"@type":"WebSite"},{"@type":"LocalBusiness","name":"Rossi"}]}</script><script type="application/ld+json">{rotto}</script>`;
@@ -45,5 +45,14 @@ describe("sitemap e link", () => {
   });
   it("sceglie le pagine più in alto nella struttura, senza la home", () => {
     expect(scegliPagine(["https://a.it/", "https://a.it/blog/2026/post-lungo/", "https://a.it/servizi/", "https://a.it/privacy-policy/", "https://a.it/terms.php"], ["https://a.it/chi-siamo/", "https://a.it/servizi"], "https://a.it/", 2)).toEqual(["https://a.it/servizi/", "https://a.it/chi-siamo/"]);
+  });
+});
+
+describe("domande e risposte", () => {
+  it("riconosce il markup FAQPage e i titoli-domanda, qualunque sia il nome della pagina", async () => {
+    const { domandeERisposte } = await import("../src/schema.js");
+    expect(domandeERisposte(`<script type="application/ld+json">{"@type":"FAQPage","mainEntity":[]}</script>`)).toEqual({ markup: true, titoliDomanda: 0 });
+    expect(domandeERisposte(`<h2>Quanto dura la farina?</h2><h3>Spedite in tutta Italia?</h3><h2>Posso ritirare in molino?</h2><h2>Contatti</h2>`)).toEqual({ markup: false, titoliDomanda: 3 });
+    expect(domandeERisposte(`<h2>Chi siamo</h2>`)).toEqual({ markup: false, titoliDomanda: 0 });
   });
 });
