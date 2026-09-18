@@ -1,5 +1,7 @@
 # controllo-ai
 
+> **Beta, in fase di validazione.** Strumento interno di Studio 121. I controlli poggiano su fonti pubbliche dei produttori (OpenAI, Anthropic, Google, Bing, Perplexity) dove esistono, e su buone pratiche dove non esistono: ogni controllo dichiara quale delle due (`base`). Il punteggio è un'indicazione, non una certificazione: nessuna AI pubblica come sceglie cosa citare. Le fonti sono verificate alla data indicata in `src/testi.ts` e possono cambiare.
+
 Il sito è leggibile dalle AI? Venti controlli, un semaforo per riga, un punteggio pesato su 100, un giudizio in parole, e per ogni controllo una spiegazione per chi non è tecnico e una soluzione per chi cura il sito. Nessuna dipendenza. Fatto da Studio 121.
 
 Cosa controlla:
